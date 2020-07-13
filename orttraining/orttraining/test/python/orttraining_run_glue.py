@@ -29,6 +29,7 @@ from onnxruntime.capi.ort_trainer import ORTTrainer, LossScaler, ModelDescriptio
 from orttraining_transformer_trainer import ORTTransformerTrainer
 
 import torch
+import argparse
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +60,7 @@ class ORTGlueTest(unittest.TestCase):
         self.train_batch_size = 8
         self.learning_rate = 2e-5
         self.num_train_epochs = 3.0
-        self.local_rank = -1
+        self.local_rank = args.local_rank
         self.overwrite_output_dir = True
         self.gradient_accumulation_steps = 1
         self.data_dir = "/bert_data/hf_data/glue_data/"
@@ -240,5 +241,22 @@ class ORTGlueTest(unittest.TestCase):
 
         return results
 
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--local_rank",
+                        type=int,
+                        default=-1,
+                        help="local_rank for distributed training on gpus")
+    args = parser.parse_args()
+    return args
+
+import sys
 if __name__ == "__main__":
+    args = parse_arguments()
+    print("args: ", args)
+    for arg in sys.argv:
+        print("arg: ", arg)
+    # https://tellthemuserstories.wordpress.com/2013/01/19/python-unittest-command-line-argument/
+    # remove command-line arguments otherwise unittest.main() will complain.
+    del sys.argv[1]
     unittest.main()
