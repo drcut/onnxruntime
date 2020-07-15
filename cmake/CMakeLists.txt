@@ -198,12 +198,12 @@ if(onnxruntime_USE_NNAPI_BUILTIN AND onnxruntime_USE_NNAPI_DNNLIBRARY)
   message(FATAL_ERROR "Please use only one of onnxruntime_USE_NNAPI_BUILTIN, onnxruntime_USE_NNAPI_DNNLIBRARY")
 endif()
 
-add_compile_definitions($<$<NOT:$<CONFIG:Debug>>:ORT_NO_RTTI> $<$<NOT:$<CONFIG:Debug>>:GOOGLE_PROTOBUF_NO_RTTI>)
+add_compile_definitions(ORT_NO_RTTI GOOGLE_PROTOBUF_NO_RTTI)
 if(MSVC)
   # Disable RTTI and turn usage of dynamic_cast and typeid into errors
-  add_compile_options("$<$<AND:$<NOT:$<CONFIG:Debug>>,$<COMPILE_LANGUAGE:CXX>>:SHELL:/GR- /we4541>")
+  add_compile_options(/GR- /we4541)
 else()
-  add_compile_options("$<$<AND:$<NOT:$<CONFIG:Debug>>,$<COMPILE_LANGUAGE:CXX>>:-fno-rtti>")
+  add_compile_options(-fno-rtti)
 endif()
 
 set(REPO_ROOT ${PROJECT_SOURCE_DIR}/..)
